@@ -1,18 +1,21 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Pages/Shared/Navbar/Navbar";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 const Main = () => {
   const router = useRouter();
+  const [FName, setFName] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Check if localStorage is available
-      const FName = localStorage.getItem("FName");
-      if (!FName) {
+      const storedFName = localStorage.getItem("FName");
+      if (!storedFName) {
         router.push("/login");
+      } else {
+        setFName(storedFName);
       }
     }
   }, [router]);
@@ -33,8 +36,7 @@ const Main = () => {
     <main>
       <Navbar />
       <h3 className="text-center my-5 text-2xl">
-        Welcome{" "}
-        <span className="font-semibold">{localStorage?.getItem("FName")}</span>
+        Welcome <span className="font-semibold">{FName}</span>
       </h3>
       <h3 className="text-center my-5 text-2xl font-semibold">
         Followers Purchase Options
