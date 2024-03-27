@@ -17,7 +17,7 @@ const Main = () => {
     localStorage.removeItem("gems");
   };
 
-  if (!localStorage.getItem("FName")) {
+  if (!localStorage?.getItem("FName")) {
     router.push("/login");
     return null; // Prevent rendering the rest of the component if not logged in
   }

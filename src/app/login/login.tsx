@@ -34,6 +34,7 @@ const Login: React.FC = () => {
     };
     login().then(() => {
       localStorage.setItem("FName", Name);
+      localStorage.setItem("gems", "20");
       console.log("login Successful");
       Swal.fire({
         position: "top-end",
