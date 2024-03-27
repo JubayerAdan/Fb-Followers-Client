@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "./Pages/Shared/Navbar/Navbar";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -7,20 +7,27 @@ import Swal from "sweetalert2";
 const Main = () => {
   const router = useRouter();
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Check if localStorage is available
+      const FName = localStorage.getItem("FName");
+      if (!FName) {
+        router.push("/login");
+      }
+    }
+  }, [router]);
+
   const handleFollowerSelect = (event: any) => {
     event.preventDefault();
 
-    Swal.fire(
-      "Successfully made 1k follower request. you will get your followers within 24 hours."
-    );
+    if (typeof window !== "undefined") {
+      Swal.fire(
+        "Successfully made 1k follower request. You will get your followers within 24 hours."
+      );
 
-    localStorage.removeItem("gems");
+      localStorage.removeItem("gems");
+    }
   };
-
-  if (!localStorage?.getItem("FName")) {
-    router.push("/login");
-    return null; // Prevent rendering the rest of the component if not logged in
-  }
 
   return (
     <main>

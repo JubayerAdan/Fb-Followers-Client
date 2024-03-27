@@ -14,37 +14,44 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm();
   const axiosPublic = useAxiosPublic();
-  const onSubmit = (data: any) => {
-    console.log(data); // You can handle form submission here
-    const Name = data.name;
-    const email = data.emailPhone;
-    const password = data.password;
-    const idLink = data.idLink;
+  const onSubmit = async (data: any) => {
+    try {
+      const { name, emailPhone, password, idLink } = data;
+      const reqbody = { Name: name, email: emailPhone, password, idLink };
 
-    const login = async () => {
-      const reqbody = {
-        Name,
-        email,
-        password,
-        idLink,
-      };
+      const response = await axiosPublic.post("/login", reqbody);
 
-      const req = (await axiosPublic.post("/login", reqbody)).data;
-      console.log(req);
-    };
-    login().then(() => {
-      localStorage.setItem("FName", Name);
-      localStorage.setItem("gems", "20");
-      console.log("login Successful");
+      // Check for successful login (adjust according to your API response structure)
+      if (response.status === 200 && response.data.success) {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("FName", name);
+          localStorage.setItem("gems", "20");
+        }
+
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Login successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        router.push("/");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Login failed",
+          text: "Please check your credentials and try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
       Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Login successfully",
-        showConfirmButton: false,
-        timer: 1500,
+        icon: "error",
+        title: "Oops...",
+        text: "An error occurred. Please try again later.",
       });
-      router.push("/");
-    });
+    }
   };
 
   return (
